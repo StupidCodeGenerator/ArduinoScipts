@@ -1,0 +1,6 @@
+Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\bin\Debug\SerialPortTest.exe.config
+Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\bin\Debug\SerialPortTest.exe
+Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\bin\Debug\SerialPortTest.pdb
+Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.csprojResolveAssemblyReference.cache
+Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.exe
+Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.pdb

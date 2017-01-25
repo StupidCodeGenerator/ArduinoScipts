@@ -1,0 +1,9 @@
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\obj\Debug\SerialPotTest_GUI.csprojResolveAssemblyReference.cache
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\obj\Debug\SerialPotTest_GUI.csproj.GenerateResource.Cache
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+Z:\Works\Program\SerialPortTest\SerialPortTest\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
