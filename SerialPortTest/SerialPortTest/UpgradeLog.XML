@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="SerialPortTest">
+</Property><Property Name="解决方案文件" Value="D:\Github\ArduinoScipts\SerialPortTest\SerialPortTest\SerialPortTest.sln">
+</Property><Property Name="Date" Value="2017年1月25日">
+</Property><Property Name="Time" Value="20:43">
+</Property></Properties><Event ErrorLevel="0" Project="SerialPortTest" Source="SerialPortTest\SerialPortTest.csproj" Description="项目文件不需要转换。">
+</Event><Event ErrorLevel="3" Project="SerialPortTest" Source="SerialPortTest\SerialPortTest.csproj" Description="无需转换">
+</Event><Event ErrorLevel="0" Project="SerialPotTest_GUI" Source="WindowsFormsApplication1\SerialPotTest_GUI.csproj" Description="项目文件不需要转换。">
+</Event><Event ErrorLevel="3" Project="SerialPotTest_GUI" Source="WindowsFormsApplication1\SerialPotTest_GUI.csproj" Description="无需转换">
+</Event><Event ErrorLevel="0" Project="" Source="SerialPortTest.sln" Description="成功转换解决方案">
+</Event><Event ErrorLevel="3" Project="" Source="SerialPortTest.sln" Description="Converted">
+</Event></UpgradeLog>

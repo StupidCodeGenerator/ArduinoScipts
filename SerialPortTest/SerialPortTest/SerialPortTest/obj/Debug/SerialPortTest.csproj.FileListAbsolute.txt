@@ -4,3 +4,6 @@ Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\bin\Debug\SerialPo
 Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.csprojResolveAssemblyReference.cache
 Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.exe
 Z:\Works\Program\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.pdb
+D:\Github\ArduinoScipts\SerialPortTest\SerialPortTest\SerialPortTest\bin\Debug\SerialPortTest.exe.config
+D:\Github\ArduinoScipts\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.exe
+D:\Github\ArduinoScipts\SerialPortTest\SerialPortTest\SerialPortTest\obj\Debug\SerialPortTest.pdb

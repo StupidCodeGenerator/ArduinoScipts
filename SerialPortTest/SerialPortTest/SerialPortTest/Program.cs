@@ -7,7 +7,7 @@ using System.IO.Ports;
 
 namespace SerialPortTest {
     class Program {
-        static void Main(string[] args) {
+        static void main(string[] args) {
             SerialPort com = new SerialPort("COM3");
             com.DataReceived += new SerialDataReceivedEventHandler(Com3_DataReceived);
             com.BaudRate = 9600;
