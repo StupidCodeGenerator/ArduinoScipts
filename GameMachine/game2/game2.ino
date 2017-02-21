@@ -1,7 +1,9 @@
+// New strategy : clear all bullets when they are all dead
+
 
 #include "U8glib.h"
 
-#define MAX 3
+#define MAX_BULLETS 5
 
 #define LOG
 
@@ -17,6 +19,7 @@ int KEY_B = 3;
 int spaceShipX = 64;
 int spaceShipY = 32;
 
+// The Point Object
 
 struct PointStruct;
 typedef struct PointStruct Point;
@@ -24,62 +27,38 @@ struct PointStruct{
   int x;
   int y;
   bool isDead;
-  int index;
 };
 
-void AddPoint(Point* pointArray[], int* ptrCurrentCount, Point* ptrNewPoint){
-  if(*ptrCurrentCount < MAX){
-    ptrNewPoint -> isDead = false;
-    ptrNewPoint -> index = (*ptrCurrentCount);
-#ifdef LOG
-    Serial.println(" -- Add -- ");
-    Serial.println(*ptrCurrentCount);
-#endif
-    pointArray[*ptrCurrentCount] = ptrNewPoint;
-#ifdef LOG
-    Serial.println((int)pointArray[*ptrCurrentCount]);
-#endif
-    (*ptrCurrentCount) ++;
-  } else {
-    // array is full, clear the dead
-    Point* temp[MAX];
-    int tempIndex = 0;
-    for(int i = 0 ; i < MAX; i ++){
-      temp[i] = NULL;
-    }
-    for(int i = 0 ; i < MAX ;i ++){
-      if(pointArray[i] -> isDead == false){
-        temp[tempIndex++] = pointArray[i];
-      }
-    }
-    (*ptrCurrentCount) = tempIndex;
-    pointArray = temp;
-#ifdef LOG
-	Serial.println(" -- delete -- ");
-	for(int i = 0 ; i < (*ptrCurrentCount); i ++){
-      Serial.println(pointArray[i] -> index);
-      Serial.println(pointArray[i] -> x);
-      Serial.println(pointArray[i] -> y);
-      Serial.println(pointArray[i] -> isDead);
-    }
-#endif
-  }
-}
+// Adds and Clear Functions
 
-void DeletePoint(Point* pointArray[], int deleteIndex){
-  if(deleteIndex < MAX && pointArray[deleteIndex] != NULL){
-    pointArray[deleteIndex] -> isDead = true;
-  }
+void AddPoint(Point* ptrNewPoint, Point* pointPtrArray[], int *ptrCurrentCount, int max){
+	if((*ptrCurrentCount) < max){
+		pointPtrArray[*ptrCurrentCount] = ptrNewPoint;
+		(*ptrCurrentCount)++;
+	}
+#ifdef LOG
+	Serial.println(" -- AddPoint -- ");
+	Serial.println(*ptrCurrentCount);
+	Serial.println(max);
+#endif
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+void ClearPoints(Point* pointPtrArray[], int *ptrCurrentCount, int max){
+	for(int i = 0 ; i < max ; i ++){
+		free(pointPtrArray[i]);
+	}
+	free(pointPtrArray);
+	(*ptrCurrentCount) = 0;
+#ifdef LOG
+	Serial.println(" -- Clear -- ");
+#endif
+}
 
 // Bullets, Spaceships, etc.
 
-Point* bullets[MAX];
+Point* bullets[MAX_BULLETS];
 int currentBulletCount = 0;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Draw functions --- 
 
 void draw(void) {
   u8g.setFont(u8g_font_6x10);
@@ -109,30 +88,40 @@ void drawBullets(void){
         int x = bullets[i] -> x;
         int y = bullets[i] -> y;
         u8g.drawLine(x - 2, y, x + 2, y );
-        //(bullets[i] -> x) ++;
-        //(bullets[i] -> y) ++;
       }
     }
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Update Functions ---
 
 void update(void){
 	// update bullets
+	bool isAllBulletDead = true;
 	for(int i = 0 ; i < currentBulletCount ; i ++){
 		Point* currentBullet = bullets[i];
+		// move
 		if(currentBullet != NULL && !(currentBullet -> isDead)){
+			isAllBulletDead = false;
 			if(currentBullet -> x < 130){
 				currentBullet -> x += 5;
-			} else {
-				DeletePoint(bullets, currentBullet -> index);
-			}
+			} 
 		}
+		// Death
+		if(currentBullet != NULL && currentBullet -> x > 130){
+			currentBullet -> isDead == true;
+		}
+	}
+	if(currentBulletCount < MAX_BULLETS){
+		isAllBulletDead = false;
+	}
+	if(isAllBulletDead){
+		ClearPoints(bullets, &currentBulletCount, MAX_BULLETS);
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// --- Main ---
 
 void setup(void) {
 
@@ -169,7 +158,7 @@ void setup(void) {
 
   // init;
   // Make all point arraies as NULL
-  for(int i = 0 ; i < MAX ; i ++){
+  for(int i = 0 ; i < MAX_BULLETS ; i ++){
     bullets[i] = NULL;
   }
 }
@@ -214,21 +203,16 @@ void loop(void) {
       Point* ptrNewBullet = malloc(sizeof(Point));
       ptrNewBullet -> x = spaceShipX;
       ptrNewBullet -> y = spaceShipY;
-#ifdef LOG
-      Serial.println(" -- Create -- ");
-      Serial.println((int)ptrNewBullet);
-#endif
-      AddPoint(bullets, &currentBulletCount, ptrNewBullet);
+      ptrNewBullet -> isDead = false;
+      AddPoint(ptrNewBullet, bullets, &currentBulletCount, MAX_BULLETS);
       lastAState = LOW;
 #ifdef LOG
       Serial.println(" -- new : -- ");
-      Serial.println(ptrNewBullet -> index);
       Serial.println(ptrNewBullet -> x);
       Serial.println(ptrNewBullet -> y);
       Serial.println(ptrNewBullet -> isDead);
       Serial.println(" -- All -- ");
       for(int i = 0 ; i < currentBulletCount; i ++){
-        Serial.println(bullets[i] -> index);
         Serial.println(bullets[i] -> x);
         Serial.println(bullets[i] -> y);
         Serial.println(bullets[i] -> isDead);
