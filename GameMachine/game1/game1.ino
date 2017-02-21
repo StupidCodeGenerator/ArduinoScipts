@@ -1,6 +1,8 @@
 
 #include "U8glib.h"
 
+#define MAX 20
+
 U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9); // SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 
 int KEY_UP = 7;
@@ -14,60 +16,50 @@ int spaceShipX = 64;
 int spaceShipY = 32;
 
 
-// The Position List
-// Each Element on it is a point node.
-// You can create a list of points representing bullets, enemies, etc.
-struct PointNodeStruct;
-typedef PointNodeStruct PointNode;
-struct PointNodeStruct{
+struct PointStruct;
+typedef struct PointStruct Point;
+struct PointStruct{
   int x;
   int y;
-  PointNode* next; 
+  bool isDead;
+  int index;
 };
 
-// Append, Delete
-
-// Append to first, it's easy
-void AddNode(PointNode** head, PointNode* newNode){
-	if (*head == NULL){
-		newNode->next = NULL;
-		*head = newNode;
-		Serial.println("Add first node");
-	} else {
-		newNode->next = *head;
-		*head = newNode;
-		Serial.println("Add more node");
-	}
+void AddPoint(Point* pointArray[], int* ptrCurrentIndex, Point* ptrNewPoint){
+  if(*ptrCurrentIndex < MAX){
+    ptrNewPoint -> isDead = false;
+    ptrNewPoint -> index = (*ptrCurrentIndex);
+    pointArray[*ptrCurrentIndex] = ptrNewPoint;
+    (*ptrCurrentIndex) ++;
+  } else {
+    // array is full, clear the dead
+    Point* temp[MAX];
+    int tempIndex = 0;
+    for(int i = 0 ; i < MAX; i ++){
+      temp[i] = NULL;
+    }
+    for(int i = 0 ; i < MAX ;i ++){
+      if(pointArray[i] -> isDead == false){
+        temp[tempIndex++] = pointArray[i];
+      }
+    }
+    (*ptrCurrentIndex) = tempIndex;
+    pointArray = temp;
+  }
 }
 
-// Delete the given one
-void DeletePoint(PointNode** head, PointNode* theNode){
-	PointNode* current = *head;
-	PointNode* pre = NULL;
-	while (current->next != NULL){
-		if (current == theNode){
-			if (pre == NULL){
-				*head = current->next;
-				current->next = NULL;
-				free(current);
-			}
-			else {
-				pre->next = current->next;
-				current->next = NULL;
-				free(current);
-			}
-		}
-		else{
-			pre = current;
-			current = current->next;
-		}
-	}
+void DeletePoint(Point* pointArray[], int deleteIndex){
+  if(deleteIndex < MAX && pointArray[deleteIndex] != NULL){
+    pointArray[deleteIndex] -> isDead = true;
+  }
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Bullets, Spaceships, etc.
 
-PointNode* bullets = NULL;
+Point* bullets[MAX];
+int currentBulletCount = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -94,14 +86,13 @@ void drawSpaceShip(void){
 
 void drawBullets(void){
   if(bullets != NULL){
-    PointNode* currentBullet = bullets;
-    while(currentBullet != NULL){
-      u8g.drawLine(currentBullet->x - 2, currentBullet->y, currentBullet->x + 2, currentBullet->y);
-      // update after drawit
-      currentBullet->x++;
-      currentBullet = currentBullet->next;
-      if(currentBullet->next != NULL){
-      	//Serial.println("not last");
+    for(int i = 0 ;i <= currentBulletCount ;i ++){
+      if(! bullets[i] -> isDead){
+        int x = bullets[i] -> x;
+        int y = bullets[i] -> y;
+        u8g.drawLine(x - 2, y, x + 2, y );
+        //(bullets[i] -> x) ++;
+        //(bullets[i] -> y) ++;
       }
     }
   }
@@ -114,7 +105,7 @@ void setup(void) {
   // flip screen, if required
   // u8g.setRot180();
 
-  // set SPI backup if required
+ // set SPI backup if required
   //u8g.setHardwareBackup(u8g_backup_avr_spi);
 
   // assign default color value
@@ -142,6 +133,11 @@ void setup(void) {
   // Debug
   Serial.begin(9600);
 
+  // init;
+  // Make all point arraies as NULL
+  for(int i = 0 ; i < MAX ; i ++){
+    bullets[i] = NULL;
+  }
 }
 
 int lastAState = HIGH;
@@ -178,11 +174,29 @@ void loop(void) {
       }
     }
     if(aKeyState == LOW && lastAState == HIGH){
-      PointNode newBullet;
+      Point newBullet;
       newBullet.x = spaceShipX;
       newBullet.y = spaceShipY;
-      AddNode(&bullets, &newBullet);
+      AddPoint(bullets, &currentBulletCount, &newBullet);
       lastAState = LOW;
+
+      // Test
+
+      Serial.println(" -- new : -- ");
+
+      Serial.println(newBullet.index);
+      Serial.println(newBullet.x);
+      Serial.println(newBullet.y);
+      Serial.println(newBullet.isDead);
+
+      Serial.println("***");
+      for(int i = 0 ; i < currentBulletCount; i ++){
+        Serial.println(bullets[i] -> index);
+        Serial.println(bullets[i] -> x);
+        Serial.println(bullets[i] -> y);
+        Serial.println(bullets[i] -> isDead);
+      }
+
     } else if (aKeyState == HIGH){
     	lastAState = HIGH;
     }
