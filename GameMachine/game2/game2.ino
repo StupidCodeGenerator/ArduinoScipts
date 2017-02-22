@@ -3,7 +3,7 @@
 
 #include "U8glib.h"
 
-#define MAX_BULLETS 5
+#define MAX_BULLETS 3
 
 #define LOG
 
@@ -53,6 +53,21 @@ void ClearPoints(Point* pointPtrArray[], int *ptrCurrentCount, int max){
 #endif
 }
 
+// If all points are dead, they need to be cleared.
+bool IsAllDead(Point* pointPtrArray[], int currentCount){
+	if(currentCount <= 0){
+		return false;
+	}
+
+	bool isAllDead = true;
+	for(int i = 0 ; i < currentCount ; i ++){
+		if(pointPtrArray[i] != NULL && !(pointPtrArray[i] -> isDead)){
+			isAllDead = false;
+		}
+	}
+	return isAllDead;
+}
+
 // Bullets, Spaceships, etc.
 
 Point* bullets[MAX_BULLETS];
@@ -97,25 +112,18 @@ void drawBullets(void){
 
 void update(void){
 	// update bullets
-	bool isAllBulletDead = true;
+	// Move
 	for(int i = 0 ; i < currentBulletCount ; i ++){
 		Point* currentBullet = bullets[i];
-		// move
 		if(currentBullet != NULL && !(currentBullet -> isDead)){
-			isAllBulletDead = false;
 			if(currentBullet -> x < 130){
 				currentBullet -> x += 5;
-			} 
-		}
-		// Death
-		if(currentBullet != NULL && currentBullet -> x > 130){
-			currentBullet -> isDead == true;
+			} else {
+				currentBullet -> isDead = true;
+			}
 		}
 	}
-	if(currentBulletCount < MAX_BULLETS){
-		isAllBulletDead = false;
-	}
-	if(isAllBulletDead){
+	if(IsAllDead(bullets, currentBulletCount)){
 		ClearPoints(bullets, &currentBulletCount, MAX_BULLETS);
 	}
 }
@@ -212,6 +220,7 @@ void loop(void) {
       Serial.println(ptrNewBullet -> y);
       Serial.println(ptrNewBullet -> isDead);
       Serial.println(" -- All -- ");
+      Serial.println(currentBulletCount);
       for(int i = 0 ; i < currentBulletCount; i ++){
         Serial.println(bullets[i] -> x);
         Serial.println(bullets[i] -> y);
